@@ -1,0 +1,136 @@
+[
+
+    {
+        "name": "id",
+        "label": "id",
+        "type": "number",
+        "visible": true,
+        "editable": false
+    },
+    {
+        "name": "brand",
+        "label": "Marca",
+        "type": "string",
+        "inputType": "text",
+        "visible": true,
+        "editable": true,
+        "sqlProperties": {
+            "type": "string",
+            "length": 255,
+            "nullable": false
+        },
+        "validations": 
+            {"front": "Validators.required", "back": "required"}
+        
+    },
+    {
+        "name": "model",
+        "label": "Modelo",
+        "type": "string",
+        "inputType": "text",
+        "visible": true,
+        "editable": true,
+        "sqlProperties": {
+            "type": "string",
+            "length": 255,
+            "nullable": false
+        },
+        "validations": 
+            {"front": "Validators.required", "back": "required"}
+        
+    },
+    {
+        "name": "year",
+        "label": "Año",
+        "type": "string",
+        "inputType": "text",
+        "visible": true,
+        "editable": true,
+        "sqlProperties": {
+            "type": "integer",
+            "nullable": false
+        },
+        "validations": 
+            {"front": "Validators.pattern('^[0-9]*$')"}
+        
+    },
+    {
+        "name": "license_plate",
+        "label": "Placa",
+        "type": "string",
+        "inputType": "text",
+        "visible": true,
+        "editable": true,
+        "sqlProperties": {
+            "type": "string",
+            "length": 255,
+            "nullable": false
+        },
+        "validations": 
+            {
+                "front": "[Validators.required, Validators.minLength(6), Validators.maxLength(6)]", 
+                "back": "string|max:6|min:6|unique:cars,license_plate,'. $this->route('car') .'"
+            }
+        
+    },
+    {
+        "name": "description",
+        "label": "Descripción",
+        "type": "string",
+        "inputType": "textarea",
+        "visible": false,
+        "editable": true,
+        "sqlProperties": {
+            "type": "longText",
+            "nullable": true
+        }
+    },
+    {
+        "name": "buy_date",
+        "label": "Fecha de compra",
+        "type": "string",
+        "inputType": "date",
+        "visible": false,
+        "editable": true,
+        "sqlProperties": {
+            "type": "date",
+            "nullable": true
+        }
+    },
+    {
+        "name": "shoe_id",
+        "label": "Zapato",
+        "type": "number",
+        "inputType": "relatedSelect",
+        "visible": true,
+        "editable": true,
+        "sqlProperties": {
+            "type": "relatedEntity"
+        },
+        "relationshipProperties":{
+            "entity": "shoe",
+            "field": "id",
+            "type": "manyToOne"
+        },
+        "validations": 
+            {
+                "front": "Validators.required", 
+                "back": "required|numeric"
+            }
+        
+    },
+    {
+        "name": "created_at",
+        "label": "Fecha de creación",
+        "type": "string",
+        "visible": false,
+        "editable": false
+    },
+    {
+        "name": "updated_at",
+        "label": "Fecha de actualización",
+        "type": "string",
+        "visible": false,
+        "editable": false
+    }
+]

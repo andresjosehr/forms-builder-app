@@ -1,0 +1,421 @@
+<form>
+    <!-- Section -->
+    <div class="grid sm:grid-cols-2 gap-8 w-full mb-8">
+        <div class="w-full col-span-1">
+            <div class="text-3xl font-bold">Gestionar entidades</div>
+            <div class="text-secondary">
+                Gestiona las entidades de la aplicacion
+            </div>
+        </div>
+        <div class="col-span-1 relative"></div>
+    </div>
+
+    <div [formGroup]="form">
+        <div class="flex w-full">
+            <div class="w-1/2">Entidades</div>
+            <div class="w-1/2 text-right">
+                <button (click)="addEntity({searchableList: 1}, true)" mat-flat-button class="bg-slate-500 text-white text-right">
+                    <mat-icon>add</mat-icon>
+                    Añadir entidad
+                </button>
+            </div>
+        </div>
+        <mat-accordion class="example-headers-align" multi *ngFor="let entity of entitiesFormArray.controls; let i = index">
+
+            <mat-expansion-panel class="mt-5">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="flex justify-between w-full items-center">
+                            <div class="w-fit flex items-center">
+                                <div class="text-2xl">
+                                    {{entity.get('label').value || 'Nombre de la entidad'}}
+                                </div>
+
+
+                            </div>
+                            <div class="text-2xl w-fit">
+                                <mat-icon (click)="deleteEntity($event, entity.get('id').value, i)">delete</mat-icon>
+                            </div>
+                        </div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div [formGroup]="entity" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
+                    <input type="hidden"  formControlName="app_id">
+                    <input type="hidden"  formControlName="id">
+
+
+                    <div class="col-span-2 text-center" [formGroup]="entity">
+                        <mat-checkbox formControlName="build_front">Build Front</mat-checkbox>
+                        <mat-checkbox formControlName="build_back">Build Back</mat-checkbox>
+                    </div>
+                    <div class="col-span-1">
+                        <mat-form-field class="w-full">
+                            <mat-label>Nombre</mat-label>
+                            <input id="name" type="text" formControlName="name" matInput />
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('name'))">
+                                <ng-container *ngIf="entity.get('name').hasError(i)">
+                                    {{ entity.get("name").errors[i] }}
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-span-1">
+                        <mat-form-field class="w-full">
+                            <mat-label>Label</mat-label>
+                            <input id="label" type="text" formControlName="label" matInput />
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('label'))">
+                                <ng-container *ngIf="entity.get('label').hasError(i)">
+                                    {{ entity.get("label").errors[i] }}
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-span-1">
+                        <mat-form-field class="w-full">
+                            <mat-label>Path</mat-label>
+                            <input id="path" type="text" formControlName="path" matInput />
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('path'))">
+                                <ng-container *ngIf="entity.get('path').hasError(i)">
+                                    {{ entity.get("path").errors[i] }}
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-span-1">
+                        <label class="example-margin">Incluir campos de busqueda en la lista</label>
+                        <div>
+                            <mat-radio-group formControlName="searchable_list">
+                                <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
+                                <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <hr>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="flex">
+                            <div class="text-xl text-black font-semibold"></div>
+                            <div class="w-1/2 text-xl text-black font-semibold">Campos</div>
+                            <div class="w-1/2 text-right">
+                                <button (click)="addField(i)" mat-flat-button class="bg-slate-500 text-white text-right">
+                                    <mat-icon>add</mat-icon>
+                                    Añadir campos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 mt-3" *ngFor="let field of getFields(i).controls">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel style="background: #e5effd">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <div class="text-xl text-black font-semibold">
+                                        {{ field.get('label').value || 'Nombre del campo' }}
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div [formGroup]="field" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
+                                <input type="hidden"  formControlName="id">
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Nombre</mat-label>
+                                        <input id="name" type="text" formControlName="name" matInput />
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(field.get('name'))">
+                                            <ng-container *ngIf="field.get('name').hasError(i)">
+                                                {{ field.get("name").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Label</mat-label>
+                                        <input id="label" type="text" formControlName="label" matInput />
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(field.get('label'))">
+                                            <ng-container *ngIf="field.get('label').hasError(i)">
+                                                {{ field.get("label").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Tipo de dato</mat-label>
+                                        <mat-select id="field_type_id" type="text" formControlName="field_type_id">
+                                            <mat-option *ngFor="let type of options?.field_types" [value]="type.id">{{type.name}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(field.get('field_type_id'))">
+                                            <ng-container *ngIf="field.get('field_type_id').hasError(i)">
+                                                {{ field.get("field_type_id").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Tipo de campo</mat-label>
+                                        <mat-select id="input_type_id" type="text" formControlName="input_type_id">
+                                            <mat-option *ngFor="let inputType of options?.input_types" [value]="inputType.id">{{inputType.name}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(field.get('input_type_id'))">
+                                            <ng-container *ngIf="field.get('input_type_id').hasError(i)">
+                                                {{ field.get("input_type_id").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Opciones del campo (Separadas por coma)</mat-label>
+                                        <input id="options" type="text" formControlName="options" matInput />
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(field.get('options'))">
+                                            <ng-container *ngIf="field.get('options').hasError(i)">
+                                                {{ field.get("options").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-span-1">
+                                    <label class="example-margin">Incluir campo como filtro en la lista</label>
+                                    <div>
+                                        <mat-radio-group formControlName="searchable">
+                                            <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
+                                            <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-1">
+                                    <label class="example-margin">Editable</label>
+                                    <div>
+                                        <mat-radio-group formControlName="editable">
+                                            <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
+                                            <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-1">
+                                    <label class="example-margin">Visible</label>
+                                    <div>
+                                        <mat-radio-group formControlName="visible">
+                                            <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
+                                            <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <hr>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <div class="text-xl mb-5 text-black font-semibold">Propiedades SQL</div>
+                                </div>
+
+                                <ng-container [formGroup]="field.get('sqlProperties')">
+                                    <input type="hidden"  formControlName="id">
+                                    <div class="col-span-1">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Tipo de columna SQL</mat-label>
+                                            <mat-select id="sql_property_type_id" type="text" formControlName="sql_property_type_id">
+                                                <mat-option *ngFor="let sqlPropertyType of options?.sql_property_types;" [value]="sqlPropertyType.id">{{sqlPropertyType.name}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-span-1">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Entidad Relacionada</mat-label>
+                                            <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
+                                                <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('name').value">{{entity.get('name').value}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-span-1">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Longitud</mat-label>
+                                            <input id="length" type="text" formControlName="length" matInput />
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-span-1">
+                                        <label>Nullable</label>
+                                        <div>
+                                            <mat-radio-group formControlName="nullable">
+                                                <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
+                                                <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                    </div>
+
+
+                                </ng-container>
+
+
+                                <div class="col-span-2">
+                                    <hr>
+                                </div>
+
+                                <div class="col-span-2">
+                                    <div class="text-xl mb-5 text-black font-semibold">Validaciones</div>
+                                </div>
+
+                                <ng-container [formGroup]="field.get('validations')">
+                                    <input type="hidden"  formControlName="id">
+
+                                    <div class="col-span-1">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Front</mat-label>
+                                            <input id="front" type="text" formControlName="front" matInput />
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Back</mat-label>
+                                            <input id="back" type="text" formControlName="back" matInput />
+                                        </mat-form-field>
+                                    </div>
+
+                                </ng-container>
+
+                            </div>
+
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+
+
+
+
+
+
+
+
+                    <div class="col-span-2">
+                        <hr>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="flex">
+                            <div class="text-xl text-black font-semibold"></div>
+                            <div class="w-1/2 text-xl text-black font-semibold">Relaciones</div>
+                            <div class="w-1/2 text-right">
+                                <button (click)="addRelationship(i)" mat-flat-button class="bg-slate-500 text-white text-right">
+                                    <mat-icon>add</mat-icon>
+                                    Añadir Relacion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 mt-3" *ngFor="let relationship of getRelationships(i)?.controls">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel style="background: #e5effd">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <div class="text-xl text-black font-semibold">
+                                        {{ 'Relación' }}
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div [formGroup]="relationship" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
+                                <input type="hidden"  formControlName="id">
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Entidad</mat-label>
+                                        <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
+                                            <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('name').value">{{entity.get('name').value}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(relationship.get('related_entity_id'))">
+                                            <ng-container *ngIf="relationship.get('related_entity_id').hasError(i)">
+                                                {{ relationship.get("related_entity_id").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Tipo de relación</mat-label>
+                                        <mat-select id="relation_type_id" type="text" formControlName="relation_type_id">
+                                            <mat-option *ngFor="let relationType of options?.relation_types" [value]="relationType.id">{{relationType.name}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(relationship.get('relation_type_id'))">
+                                            <ng-container *ngIf="relationship.get('relation_type_id').hasError(i)">
+                                                {{ relationship.get("relation_type_id").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="mt-10">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Output
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <!-- Content -->
+              <div>
+                <div
+                    id="output"
+                    class="fira-code text-sm max-h-120 overflow-auto"
+                    style="
+                        background: #e5e5e5;
+                        border-radius: 10px;
+                        padding: 30px;
+                        text-align: left;
+                        border: 2px solid gray;
+                        display: flex;
+                        flex-direction: column;
+                    "
+                >
+                    <div>Output:</div>
+                    <pre>
+                                    {{processOutput}}
+                                    <hr>
+                                </pre>
+                </div>
+            </div>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+    </div>
+
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+        <button class="ml-4" mat-flat-button type="button" [color]="'primary'">
+            <!-- (click)="abort()" -->
+            Cancelar
+        </button>
+        <button
+        (click)="createEntity(false)"
+         class="ml-4" mat-flat-button type="button" [color]="'primary'">
+            Guardar
+        </button>
+    </div>
+</form>

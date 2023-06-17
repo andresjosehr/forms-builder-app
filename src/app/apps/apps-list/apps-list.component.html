@@ -1,0 +1,99 @@
+<div class="w-full p-10">
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full mb-6">
+		<div class="w-full col-span-1">
+			<div class="text-3xl font-bold">Aplicaciones</div>
+			<div class="text-secondary">Una lista de aplicaciones registradas en el sistema</div>
+		</div>
+		<div class="w-full col-span-1">
+			<div class='sm:text-right'>
+				<button [routerLink]="'/aplicaciones/crear'" class="w-full sm:w-fit rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Crear aplicacion</button>
+			</div>
+		</div>
+		<div class="w-full col-span-1">
+			<!-- Success -->
+			<fuse-alert *ngIf="m" [type]="'success'">
+				<span fuseAlertTitle>Exito</span>
+				El/la aplicacion ha sido
+				<span *ngIf="m==='1'">creado</span>
+				<span *ngIf="m==='2'">actualizado</span>
+				exitosamente
+			</fuse-alert>
+		</div>
+	</div>
+
+		<div [formGroup]="_searchFormGroup" class="grid grid-cols-11 gap-2 items-center search-form">
+
+          <div class="col-span-2">
+            <mat-form-field class="w-full" appearance="outline">
+              <mat-label>Nombre</mat-label>
+
+                  <input id='name' type="text" formControlName="name" matInput>
+
+            </mat-form-field>
+          </div>
+
+        <div class="col-span-2">
+          <mat-form-field class="w-full" appearance="outline">
+              <mat-label>Termino</mat-label>
+              <input matInput formControlName="searchString">
+          </mat-form-field>
+        </div>
+        <div class="col-span-1 text-left">
+          <button (click)="makeSearch();" mat-mini-fab>
+              <mat-icon aria-label="Example icon-button with a heart icon">search</mat-icon>
+          </button>
+        </div>
+		</div>
+    <hr class="my-3">
+	<div class="sm:col-span-6 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+		<!-- Section -->
+		<div class="flex flex-col flex-auto mt-2 overflow-x-auto">
+				<table
+						class="md:min-w-240 overflow-y-visible"
+						mat-table
+						[dataSource]="dataSource">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>id</th>
+              <td data-label="Dirección" mat-cell *matCellDef="let app" class="px-4">
+                <span class="font-medium">
+                  {{app.id || "-"}}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td data-label="Dirección" mat-cell *matCellDef="let app" class="px-4">
+                <span class="font-medium">
+                  {{app.name || "-"}}
+                </span>
+              </td>
+            </ng-container>
+
+				<!-- Acciones -->
+				<ng-container matColumnDef="actions">
+					<th mat-header-cell *matHeaderCellDef>Acciones</th>
+					<td data-label="Acciones" mat-cell *matCellDef="let app">
+						<div class="flex justify-end gap-2">
+							<div class="1/2">
+									<mat-icon [routerLink]="'/aplicaciones/editar/'+app.id" class="text-on-primary-300">edit</mat-icon>
+							</div>
+						<div class="1/2">
+									<mat-icon (click)="confirmDestroy(app.id)" class="text-red-500">delete</mat-icon>
+							</div>
+						</div>
+					</td>
+				</ng-container>
+					<tr class="table-header" mat-header-row *matHeaderRowDef="columns"></tr>
+					<tr class="cursor-pointer" mat-row *matRowDef="let row; columns: columns;"></tr>
+				</table>
+				<mat-paginator [length]="entitiesPaginated?.total"
+						[pageSize]="entitiesPaginated?.per_page"
+						[pageSizeOptions]="[10, 25, 100]"
+						(page)="paginate($event)"
+						aria-label="Select page">
+				</mat-paginator>
+		</div>
+	</div>
+</div>
