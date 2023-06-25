@@ -7,7 +7,7 @@ import { ManageEntityComponent } from 'app/shared/generic-components/manage-enti
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { UserService } from 'app/core/user/user.service';
-import { catchError } from 'rxjs';
+import { catchError, from } from 'rxjs';
 
 @Component({
   selector: 'app-manage-entities',
@@ -66,13 +66,15 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             });
         });
 
-        this.afterCreateEntity.subscribe((response) => {
-            // this.creatingEntity = false;
-            this.fillValues(response);
+        this.afterCreateEntity.subscribe(({response, error}) => {
+            this.creatingEntity = false;
+            if(!error){
+                this.fillValues(response);
+            }
         });
         this.beforeCreateEntity.subscribe((response) => {
-            // this.creatingEntity = true;
-            // this.checkLog();
+            this.creatingEntity = true;
+            this.checkLog();
         });
     }
 
@@ -94,15 +96,22 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
         this.entitiesFormArray.push(this._formBuilder.group({
             id: [entity.id],
             app_id: [this.entityID],
-            build_front: [false],
-            build_back: [false],
-            name: [entity.name || '', Validators.required],
+            code: [entity.code || this.code()],
+            build: [false],
+            built_edition: [entity.built_edition || 0],
+            name: [entity.name || ''],
             path: [entity.path || 'src/app', Validators.required],
             label: [entity.label ||'', Validators.required],
             searchable_list: [searchableList, Validators.required],
             fields: this._formBuilder.array([]),
             relationships: this._formBuilder.array([]),
         }));
+
+        // Value changes to this last entity
+        this.entitiesFormArray.at(this.entitiesFormArray.length - 1).valueChanges.subscribe((value) => {
+            this.entitiesFormArray.at(this.entitiesFormArray.length - 1).get('built_edition').setValue(0, {emitEvent: false});
+        })
+
 
         // add empty field
 
@@ -129,27 +138,23 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
         const nullable = field.sql_properties?.nullable === 0 ? false : true;
 
         // Search for the related entity name from entity_id
-        const relatedEntity = this.form.value.entities.find((entity) => {
-
-            return entity.id === field?.relationship_properties?.related_entity_id;
-        }) || {};
-
-        const relatedEntitySqlName = this.form.value.entities.find((entity) => {
-            return entity.id === field?.sql_properties?.related_entity_id;
-        })?.name || '';
+        const relatedEntity = this.form.value.entities.find((entity) => entity.id === field?.relationship_properties?.related_entity_id ) || {};
+        const relatedEntitySqlName = this.form.value.entities.find((entity) => entity.id === field?.sql_properties?.related_entity_id )?.label || '';
 
 
         // Search for the related field name from field_id
 
         this.getFields(i).push(this._formBuilder.group({
             id: [field.id || null],
-            name: [field.name || '', Validators.required],
+            code: [field.code || this.code()],
+            name: [field.name || ''],
+            built_edition: [field.built_edition || 0],
             label: [field.label || '', Validators.required],
             field_type_id: [field.field_type_id || 1, Validators.required],
             input_type_id: [field.input_type_id || 1, Validators.required],
             searchable: [searchable, Validators.required],
             entity_id: [field.entity_id || null],
-            options: [field.options || null],
+            options: [field?.options?.map(e=>e.name)?.join(',') || null],
             visible: [visible, Validators.required],
             editable: [editable],
             sqlProperties: this._formBuilder.group({
@@ -159,18 +164,20 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
                 length: [field.sql_properties?.length || null],
                 nullable: [nullable || false],
             }),
-            // relationshipProperties: this._formBuilder.group({
-            //     id: [field.relationship_properties?.id],
-            //     related_entity_id: [relatedEntity.name || null],
-            //     related_field_id: [relatedFieldName || null],
-            //     relation_type_id: [field.relationship_properties?.relation_type_id || null],
-            // }),
             validations: this._formBuilder.group({
                 id: [field.validations?.id],
                 front: [field.validations?.front || []],
                 back: [field.validations?.back || []],
             }),
         }));
+        // Value changes to this last field
+        const len = this.getFields(i).length - 1;
+        console.log(this.getFields(i).controls[len]);
+        this.getFields(i).controls[len].valueChanges.subscribe((value) => {
+            console.log("Estoy cambiando")
+            this.getFields(i).controls[len].get('built_edition').setValue(0, {emitEvent: false});
+            console.log(this.entitiesFormArray.value)
+        });
     }
 
     addRelationship(i, relation: any = {}): void{
@@ -184,15 +191,11 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             id: [relation.id || null],
             entity_id: [relation.entity_id || null],
             relation_type_id: [relation.relation_type_id || null],
-            related_entity_id: [relatedEntity.name || null],
+            related_entity_id: [relatedEntity.label || null],
         }));
     }
 
-    getRelatedEntityFields(entityName): FormArray{
-        const entity = this.form.value.entities.find((entity) => entity.name === entityName);
-        return entity?.fields || [];
 
-    }
 
 
     debug(){
@@ -202,17 +205,16 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
     fillValues(response): void {
         response.data.forEach((entity) => {
             // find the entity in the form and set the id
-            const entityFormGroup = (this.form.get('entities') as FormArray).controls.find((control) => control.get('name').value === entity.name) as FormGroup;
-            entityFormGroup.patchValue(entity);
-            entityFormGroup.get('build_front').setValue(false);
-            entityFormGroup.get('build_back').setValue(false);
+            const entityFormGroup = (this.form.get('entities') as FormArray).controls.find((control) => control.get('code').value === entity.code) as FormGroup;
+            entityFormGroup.patchValue(entity, {emitEvent: false});
+            entityFormGroup.get('build').setValue(false, {emitEvent: false});
 
             // find the fields in the form and set the id
             (entityFormGroup.get('fields') as FormArray).controls.forEach((field) => {
-                const fieldData = entity.fields.find((fieldData) => fieldData.name === field.get('name').value);
+                const fieldData = entity.fields.find((fieldData) => fieldData.code === field.get('code').value);
 
-                field.patchValue(fieldData);
-                field.get('sqlProperties').patchValue(fieldData.sql_properties);
+                field.patchValue(fieldData, {emitEvent: false});
+                field.get('sqlProperties').patchValue(fieldData.sql_properties, {emitEvent: false});
 
                 const searchable = fieldData.searchable === 0 ? false : true;
                 const visible = fieldData.visible === 0 ? false : true;
@@ -221,24 +223,24 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
 
 
 
-
-                field.get('searchable').patchValue(searchable);
-                field.get('visible').patchValue(visible);
-                field.get('editable').patchValue(editable);
-                field.get('sqlProperties').get('nullable').patchValue(nullable);
+                field.get('options').patchValue(fieldData.options?.map(e=>e.name)?.join(',') || '', {emitEvent: false});
+                field.get('searchable').patchValue(searchable, {emitEvent: false});
+                field.get('visible').patchValue(visible, {emitEvent: false});
+                field.get('editable').patchValue(editable, {emitEvent: false});
+                field.get('sqlProperties').get('nullable').patchValue(nullable, {emitEvent: false});
 
             });
 
             (entityFormGroup.get('relationships') as FormArray).controls.forEach((control) => {
-                const relationshipData = entity.relationships.find((r) => r.name === control.get('name').value);
+                const relationshipData = entity.relationships.find((r) => r.code === control.get('code').value);
 
-                control.patchValue(relationshipData);
+                control.patchValue(relationshipData, {emitEvent: false});
 
                 const relatedEntity = this.form.value.entities.find((entity) => {
                     return entity.id === relationshipData?.related_entity_id;
                 }) || {};
 
-                control.get('related_entity_id').patchValue(relatedEntity.name);
+                control.get('related_entity_id').patchValue(relatedEntity.code, {emitEvent: false});
             });
 
         });
@@ -271,36 +273,41 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
 
 
     async checkLog(): Promise<void> {
-
-        this._globalService.checkLog()
-        .pipe(catchError(error => {
-            setTimeout(() => {
-                if(this.creatingEntity){
-                    this.checkLog();
-                }
-            }, 1000);
-
-          return error;
-        }))
-        .subscribe(response => {
-            if(response){
+        try {
+            const response = await this._globalService.checkLog().toPromise();
+            if (response) {
                 this.processOutput = response;
             }
 
             setTimeout(() => {
-                var div = document.getElementById("output");
+                const div = document.getElementById("output");
                 div.scrollTop = div.scrollHeight - div.clientHeight;
-                if(this.creatingEntity){
+                if (this.creatingEntity) {
                     this.checkLog();
                 }
             }, 100);
+        } catch (error) {
+            setTimeout(() => {
+                if (this.creatingEntity) {
+                    this.checkLog();
+                }
+            }, 1000);
+        }
 
-        })
         await this.sleep(1000);
-
     }
 
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
+    code(): string {
+        const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+
+        for (let i = 0; i < 20; i++) {
+          result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+      }
 }

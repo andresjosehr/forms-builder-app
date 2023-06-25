@@ -25,34 +25,28 @@
             <mat-expansion-panel class="mt-5">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <div class="flex justify-between w-full items-center">
-                            <div class="w-fit flex items-center">
-                                <div class="text-2xl">
-                                    {{entity.get('label').value || 'Nombre de la entidad'}}
-                                </div>
-
-
-                            </div>
-                            <div class="text-2xl w-fit">
-                                <mat-icon (click)="deleteEntity($event, entity.get('id').value, i)">delete</mat-icon>
-                            </div>
+                        <div class="flex gap-3">
+                            <mat-icon *ngIf="!entity.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                            <mat-icon *ngIf="entity.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                            <div class="text-xl text-black font-semibold">{{entity.get('label').value || 'Nombre de la entidad'}}</div>
                         </div>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
                 <div [formGroup]="entity" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
-                    <input type="hidden"  formControlName="app_id">
-                    <input type="hidden"  formControlName="id">
+                    <input type="hidden" formControlName="app_id">
+                    <input type="hidden" formControlName="id">
+                    <input type="hidden" formControlName="code">
+                    <input type="hidden" formControlName="built_edition">
 
 
                     <div class="col-span-2 text-center" [formGroup]="entity">
-                        <mat-checkbox formControlName="build_front">Build Front</mat-checkbox>
-                        <mat-checkbox formControlName="build_back">Build Back</mat-checkbox>
+                        <mat-checkbox formControlName="build">Construir formulario</mat-checkbox>
                     </div>
                     <div class="col-span-1">
                         <mat-form-field class="w-full">
                             <mat-label>Nombre</mat-label>
-                            <input id="name" type="text" formControlName="name" matInput />
+                            <input id="text" type="text" formControlName="name" matInput />
                             <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('name'))">
                                 <ng-container *ngIf="entity.get('name').hasError(i)">
                                     {{ entity.get("name").errors[i] }}
@@ -113,18 +107,23 @@
                             <mat-expansion-panel style="background: #e5effd">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <div class="text-xl text-black font-semibold">
-                                        {{ field.get('label').value || 'Nombre del campo' }}
+                                    <div class="flex gap-3">
+                                        <mat-icon *ngIf="!field.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                                        <mat-icon *ngIf="field.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                                        <div class="text-xl text-black font-semibold">{{ field.get('label').value || 'Nombre del campo' }}</div>
                                     </div>
+
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
 
                             <div [formGroup]="field" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
-                                <input type="hidden"  formControlName="id">
+                                <input type="hidden" formControlName="id">
+                                <input type="hidden" formControlName="code">
+                                <input type="hidden" formControlName="built_edition">
                                 <div class="col-span-1">
                                     <mat-form-field class="w-full">
                                         <mat-label>Nombre</mat-label>
-                                        <input id="name" type="text" formControlName="name" matInput />
+                                        <input id="text" type="text" formControlName="name" matInput />
                                         <mat-error *ngFor="let i of _globalService.errorsLength(field.get('name'))">
                                             <ng-container *ngIf="field.get('name').hasError(i)">
                                                 {{ field.get("name").errors[i] }}
@@ -235,7 +234,7 @@
                                         <mat-form-field class="w-full">
                                             <mat-label>Entidad Relacionada</mat-label>
                                             <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
-                                                <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('name').value">{{entity.get('name').value}}</mat-option>
+                                                <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('code').value">{{entity.get('label').value}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -334,7 +333,7 @@
                                     <mat-form-field class="w-full">
                                         <mat-label>Entidad</mat-label>
                                         <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
-                                            <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('name').value">{{entity.get('name').value}}</mat-option>
+                                            <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('code').value">{{entity.get('label').value}}</mat-option>
                                         </mat-select>
                                         <mat-error *ngFor="let i of _globalService.errorsLength(relationship.get('related_entity_id'))">
                                             <ng-container *ngIf="relationship.get('related_entity_id').hasError(i)">

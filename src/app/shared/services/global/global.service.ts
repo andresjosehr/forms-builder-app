@@ -166,7 +166,7 @@ export class GlobalService {
         // First erease log file content
 
 
-        return this._http.get('assets/log', { responseType: 'text' });
+        return this._http.get(`${environment.api}/check-log`, { responseType: 'text' });
     }
 
 	// saveDataAsCSV(data: any, fileName: string): void {

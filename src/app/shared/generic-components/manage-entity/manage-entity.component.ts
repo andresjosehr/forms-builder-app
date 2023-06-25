@@ -60,9 +60,9 @@ export class ManageEntityComponent<Entity> {
 
     createEntity(redirectAfterCreated = true): void {
 
-        if(this.thereAreFormErrors()){
-            return;
-        }
+        // if(this.thereAreFormErrors()){
+        //     return;
+        // }
 
         this.beforeCreateEntity.next(this.entityFormGroup.value);
 
@@ -71,8 +71,8 @@ export class ManageEntityComponent<Entity> {
             .pipe()
             .subscribe(
                 (response) => {
-                    this.afterCreateEntity.next(response);
-                    this.entityFormGroup.enable();
+                    this.afterCreateEntity.next({response, error: false});
+                    // this.entityFormGroup.enable();
                     // navigate with query params
                     if(redirectAfterCreated){
                         this._router.navigate([`/${this.dasherizedEntity}/lista`,{ m: 1 }]);
@@ -133,6 +133,8 @@ export class ManageEntityComponent<Entity> {
 
     handleErrorRequestError(response): void {
         this.entityFormGroup.enable();
+
+        this.afterCreateEntity.next({response, error: true});
 
         if ( response.message === this._globalService.httpValidationErrorMessage ) {
             this.entityFormGroup = this._globalService.getValidationErrors( this.entityFormGroup, response );

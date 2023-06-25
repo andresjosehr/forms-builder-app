@@ -14,6 +14,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 
 
@@ -29,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 	MatNativeDateModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTooltipModule,
     MatSelectModule,
     DateModule,
     ReactiveFormsModule,
