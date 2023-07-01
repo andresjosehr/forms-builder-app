@@ -19,5 +19,9 @@ export class ManageEntitiesService extends GenericServiceService<any> {
         return this._http.get<any>(`${environment.api}/get-options-for-select`);
     }
 
+    deleteField(id): Observable<any>{
+        return this._http.get<any>(`${environment.api}/delete-field/${id}`);
+    }
+
 
 }

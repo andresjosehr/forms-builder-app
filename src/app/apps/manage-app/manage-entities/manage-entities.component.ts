@@ -93,12 +93,13 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
 
     addEntity(entity: any = {}, addID= false): void{
         const searchableList = entity.searchable_list === 1 ? true : false;
+        // console.log(entity.built_edition);
         this.entitiesFormArray.push(this._formBuilder.group({
             id: [entity.id],
             app_id: [this.entityID],
             code: [entity.code || this.code()],
             build: [false],
-            built_edition: [entity.built_edition || 0],
+            built_edition: [entity.built_edition],
             name: [entity.name || ''],
             path: [entity.path || 'src/app', Validators.required],
             label: [entity.label ||'', Validators.required],
@@ -109,7 +110,9 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
 
         // Value changes to this last entity
         this.entitiesFormArray.at(this.entitiesFormArray.length - 1).valueChanges.subscribe((value) => {
-            this.entitiesFormArray.at(this.entitiesFormArray.length - 1).get('built_edition').setValue(0, {emitEvent: false});
+            if(this.entitiesFormArray.dirty){
+                this.entitiesFormArray.at(this.entitiesFormArray.length - 1).get('built_edition').setValue(0, {emitEvent: false});
+            }
         })
 
 
@@ -142,6 +145,15 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
         const relatedEntitySqlName = this.form.value.entities.find((entity) => entity.id === field?.sql_properties?.related_entity_id )?.label || '';
 
 
+        const validationFA = this._formBuilder.array([]);
+        field.validations?.forEach((v) => {
+            (validationFA as FormArray).push(this._formBuilder.group({
+                validation_id: [v.pivot.validation_id],
+                field_id: [v.pivot.field_id],
+                value: [v.pivot.value],
+            }));
+        });
+
         // Search for the related field name from field_id
 
         this.getFields(i).push(this._formBuilder.group({
@@ -164,19 +176,14 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
                 length: [field.sql_properties?.length || null],
                 nullable: [nullable || false],
             }),
-            validations: this._formBuilder.group({
-                id: [field.validations?.id],
-                front: [field.validations?.front || []],
-                back: [field.validations?.back || []],
-            }),
+            validations: validationFA,
         }));
         // Value changes to this last field
         const len = this.getFields(i).length - 1;
-        console.log(this.getFields(i).controls[len]);
         this.getFields(i).controls[len].valueChanges.subscribe((value) => {
-            console.log("Estoy cambiando")
+
             this.getFields(i).controls[len].get('built_edition').setValue(0, {emitEvent: false});
-            console.log(this.entitiesFormArray.value)
+
         });
     }
 
@@ -264,12 +271,12 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             }
 
             this._service.destroy(id).subscribe((response) => {
-
                 this.entitiesFormArray.removeAt(index);
                 this._globalService.openSnackBar('Entidad eliminada correctamente');
             });
         });
     }
+
 
 
     async checkLog(): Promise<void> {

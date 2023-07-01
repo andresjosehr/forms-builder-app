@@ -53,7 +53,7 @@ export class ManageEntityComponent<Entity> {
 
     getEntity(): void {
         this._service.get(this.entityID).subscribe((response) => {
-            this.entityFormGroup.patchValue(response.data);
+            this.entityFormGroup.patchValue(response.data, {emitEvent: false});
             this.afterGetEntity.next(response.data);
         });
     }
@@ -110,7 +110,7 @@ export class ManageEntityComponent<Entity> {
 
         // Return if the form is invalid
         if (this.entityFormGroup.invalid) {
-            this.entityFormGroup.setValue(this.entityFormGroup.value);
+            this.entityFormGroup.setValue(this.entityFormGroup.value, {emitEvent: false});
 
             this.entityFormGroup.markAllAsTouched();
             this.entityFormGroup = this._globalService.getValidationErrorsFront(
@@ -122,8 +122,8 @@ export class ManageEntityComponent<Entity> {
         }
 
         // Disable the form
-        this.entityFormGroup.disable();
-        this.entityFormGroup.updateValueAndValidity();
+        // this.entityFormGroup.disable();
+        // this.entityFormGroup.updateValueAndValidity();
 
         // Hide the alert
         this.showAlert = false;
