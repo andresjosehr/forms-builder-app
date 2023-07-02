@@ -138,11 +138,9 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
         const searchable = field.searchable === 0 ? false : true;
         const visible = field.visible === 0 ? false : true;
         const editable = field.editable === 0 ? false : true;
-        const nullable = field.sql_properties?.nullable === 0 ? false : true;
 
         // Search for the related entity name from entity_id
         const relatedEntity = this.form.value.entities.find((entity) => entity.id === field?.relationship_properties?.related_entity_id ) || {};
-        const relatedEntitySqlName = this.form.value.entities.find((entity) => entity.id === field?.sql_properties?.related_entity_id )?.label || '';
 
 
         const validationFA = this._formBuilder.array([]);
@@ -169,13 +167,6 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             options: [field?.options?.map(e=>e.name)?.join(',') || null],
             visible: [visible, Validators.required],
             editable: [editable],
-            sqlProperties: this._formBuilder.group({
-                id: [field.sql_properties?.id],
-                related_entity_id: [relatedEntitySqlName || null],
-                sql_property_type_id: [field.sql_properties?.sql_property_type_id || 1, Validators.required],
-                length: [field.sql_properties?.length || null],
-                nullable: [nullable || false],
-            }),
             validations: validationFA,
         }));
         // Value changes to this last field
@@ -221,12 +212,11 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
                 const fieldData = entity.fields.find((fieldData) => fieldData.code === field.get('code').value);
 
                 field.patchValue(fieldData, {emitEvent: false});
-                field.get('sqlProperties').patchValue(fieldData.sql_properties, {emitEvent: false});
 
                 const searchable = fieldData.searchable === 0 ? false : true;
                 const visible = fieldData.visible === 0 ? false : true;
                 const editable = fieldData.editable === 0 ? false : true;
-                const nullable = fieldData.sql_properties?.nullable === 0 ? false : true;
+
 
 
 
@@ -234,7 +224,6 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
                 field.get('searchable').patchValue(searchable, {emitEvent: false});
                 field.get('visible').patchValue(visible, {emitEvent: false});
                 field.get('editable').patchValue(editable, {emitEvent: false});
-                field.get('sqlProperties').get('nullable').patchValue(nullable, {emitEvent: false});
 
             });
 

@@ -113,54 +113,6 @@
             </div>
         </div>
 
-        <div class="col-span-2">
-            <hr>
-        </div>
-
-        <div class="col-span-2">
-            <div class="text-xl mb-5 text-black font-semibold">Propiedades SQL</div>
-        </div>
-
-        <ng-container [formGroup]="field.get('sqlProperties')">
-            <input type="hidden"  formControlName="id">
-            <div class="col-span-1">
-                <mat-form-field class="w-full">
-                    <mat-label>Tipo de columna SQL</mat-label>
-                    <mat-select id="sql_property_type_id" type="text" formControlName="sql_property_type_id">
-                        <mat-option *ngFor="let sqlPropertyType of options?.sql_property_types;" [value]="sqlPropertyType.id">{{sqlPropertyType.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-
-            <div class="col-span-1">
-                <mat-form-field class="w-full">
-                    <mat-label>Entidad Relacionada</mat-label>
-                    <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
-                        <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('code').value">{{entity.get('label').value}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-
-            <div class="col-span-1">
-                <mat-form-field class="w-full">
-                    <mat-label>Longitud</mat-label>
-                    <input id="length" type="text" formControlName="length" matInput />
-                </mat-form-field>
-            </div>
-
-            <div class="col-span-1">
-                <label>Nullable</label>
-                <div>
-                    <mat-radio-group formControlName="nullable">
-                        <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
-                        <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
-                    </mat-radio-group>
-                </div>
-            </div>
-
-
-        </ng-container>
-
 
         <div class="col-span-2">
             <hr>
