@@ -35,8 +35,10 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             id: [],
             app_id: [],
             code: [],
-            build: [],
-            built_edition: [],
+            build_layout_1: [],
+            build_layout_2: [],
+            built_edition_layout_1: [],
+            built_edition_layout_2: [],
             name: [],
             frontend_path: ['src/app'],
             label: [],
@@ -70,7 +72,8 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
                 });
 
                 this.entityFG.valueChanges.subscribe((value) => {
-                    this.entityFG.get('built_edition').setValue(0, {emitEvent: false});
+                    this.entityFG.get('built_edition_layout_1').setValue(0, {emitEvent: false});
+                    this.entityFG.get('built_edition_layout_2').setValue(0, {emitEvent: false});
                 });
             // entities.forEach((entity, i) => {
             //     entity.relationships.forEach((relationship) => {
@@ -127,7 +130,8 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             id: [field.id || null],
             code: [field.code || this.code()],
             name: [field.name || ''],
-            built_edition: [field.built_edition || 0],
+            built_edition_layout_1: [field.built_edition_layout_1 || 0],
+            built_edition_layout_2: [field.built_edition_layout_2 || 0],
             label: [field.label || '', Validators.required],
             field_type_id: [field.field_type_id || 1, Validators.required],
             input_type_id: [field.input_type_id || 1, Validators.required],
@@ -143,8 +147,10 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
         const len = this.getFields().length - 1;
 
         this.getFields().controls[len].valueChanges.subscribe((value) => {
-            this.entityFG.get('built_edition').setValue(0, {emitEvent: false});
-            this.getFields().controls[len].get('built_edition').setValue(0, {emitEvent: false});
+            this.entityFG.get('built_edition_layout_1').setValue(0, {emitEvent: false});
+            this.entityFG.get('built_edition_layout_2').setValue(0, {emitEvent: false});
+            this.getFields().controls[len].get('built_edition_layout_1').setValue(0, {emitEvent: false});
+            this.getFields().controls[len].get('built_edition_layout_2').setValue(0, {emitEvent: false});
         });
     }
 
@@ -246,5 +252,15 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
           result += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         return result;
+      }
+
+      preCreateEntity(layout = null){
+
+        if(layout == 1){
+            this.entityFG.get('build_layout_1').setValue(true, {emitEvent: false});
+        }
+
+
+        this.createEntity(false)
       }
 }

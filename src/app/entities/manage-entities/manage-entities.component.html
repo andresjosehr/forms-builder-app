@@ -22,8 +22,8 @@
         </div>
                 <div class="flex w-full">
                     <div class="flex gap-3 w-1/2">
-                        <mat-icon *ngIf="!entityFG.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
-                        <mat-icon *ngIf="entityFG.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                        <mat-icon *ngIf="!entityFG.get('built_edition_layout_1').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                        <mat-icon *ngIf="entityFG.get('built_edition_layout_1').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
                         <div class="text-xl text-black font-semibold">{{entityFG.get('label').value || 'Nombre de la entidad'}}</div>
                     </div>
                     <div class="w-1/2">
@@ -37,10 +37,11 @@
                     <input type="hidden" formControlName="app_id">
                     <input type="hidden" formControlName="id">
                     <input type="hidden" formControlName="code">
-                    <input type="hidden" formControlName="built_edition">
+                    <input type="hidden" formControlName="built_edition_layout_1">
+                    <input type="hidden" formControlName="built_edition_layout_2">
 
 
-                    <div class="col-span-2 text-center" [formGroup]="entityFG">
+                    <div class="col-span-2 text-center hidden" [formGroup]="entityFG">
                         <mat-checkbox formControlName="build">Construir formulario</mat-checkbox>
                     </div>
                     <div class="col-span-1">
@@ -208,54 +209,51 @@
                 </div>
 
 
-
-        <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel class="mt-10">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  Output
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-
-              <!-- Content -->
-              <div>
-                <div
-                    id="output"
-                    class="fira-code text-sm max-h-120 overflow-auto"
-                    style="
-                        background: #e5e5e5;
-                        border-radius: 10px;
-                        padding: 30px;
-                        text-align: left;
-                        border: 2px solid gray;
-                        display: flex;
-                        flex-direction: column;
-                    "
-                >
-                    <div>Output:</div>
-                    <pre>
-                                    {{processOutput}}
-                                    <hr>
-                                </pre>
-                </div>
-            </div>
-
-            </mat-expansion-panel>
-          </mat-accordion>
     </div>
 
     <!-- Divider -->
     <div class="mt-11 mb-10 border-t"></div>
     <!-- Actions -->
-    <div class="flex items-center justify-end">
-        <button class="ml-4" mat-flat-button type="button" [color]="'primary'">
-            <!-- (click)="abort()" -->
-            Cancelar
-        </button>
+    <div class="flex items-center justify-between">
         <button
-        (click)="createEntity(false)"
+        (click)="preCreateEntity()"
          class="ml-4" mat-flat-button type="button" [color]="'primary'">
             Guardar
         </button>
+
+        <button
+        (click)="preCreateEntity(1)"
+         class="ml-4" mat-flat-button type="button" [color]="'primary'">
+            Guardar y renderizar formulario tipo 1
+        </button>
+
+        <button
+        (click)="preCreateEntity(2)"
+         class="ml-4" mat-flat-button type="button" [color]="'primary'">
+            Guardar y renderizar formulario tipo 2
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div>
+        <div
+            id="output"
+            class="fira-code text-sm max-h-120 overflow-auto mt-10"
+            style="
+                background: #e5e5e5;
+                border-radius: 10px;
+                padding: 30px;
+                text-align: left;
+                border: 2px solid gray;
+                display: flex;
+                flex-direction: column;
+            "
+        >
+            <div>Output:</div>
+            <pre>
+                {{processOutput}}
+                <hr>
+            </pre>
+        </div>
     </div>
 </form>
