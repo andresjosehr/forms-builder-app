@@ -2,20 +2,20 @@
 import { FuseNavigationItem } from '@fuse/components/navigation';
 
 const navigation: FuseNavigationItem[] = [
-    {
-        id   : 'dashboard',
-        title: 'Dashboard',
-        type : 'basic',
-        icon : 'heroicons_outline:chart-pie',
-        link : '/dashboard'
-    },
+    // {
+    //     id   : 'dashboard',
+    //     title: 'Dashboard',
+    //     type : 'basic',
+    //     icon : 'heroicons_outline:chart-pie',
+    //     link : '/dashboard'
+    // },
 
     {
-        id   : 'apps',
-        title: 'Apps',
+        id   : 'forms',
+        title: 'Formularios',
         type : 'basic',
         icon : 'heroicons_outline:chart-pie',
-        link : '/aplicaciones'
+        link : '/formularios'
     }
 ];
 

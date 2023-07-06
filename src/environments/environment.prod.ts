@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    api: 'https://apps-management.test/api/public/api'
+    api: 'http://apps-management.test/api/public/api'
 };

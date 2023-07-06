@@ -84,7 +84,7 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'dashboard', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
-            { path: 'aplicaciones', loadChildren: () => import('app/apps/apps.module').then(m => m.AppsModule) },
+            { path: 'formularios', loadChildren: () => import('app/entities/entities.module').then(m => m.EntitiesModule) },
         ]
     },
 

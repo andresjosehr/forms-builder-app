@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ManageEntitiesService } from 'app/entities/service/manage-entities.service';
 import { GlobalService } from 'app/shared/services/global/global.service';
-import { ManageEntitiesService } from '../service/manage-entities.service';
 
 @Component({
   selector: 'app-field',

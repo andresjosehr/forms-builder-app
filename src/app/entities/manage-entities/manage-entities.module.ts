@@ -16,6 +16,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { FieldModule } from './field/field.module';
+import {MatStepperModule} from '@angular/material/stepper';
+
 
 
 
@@ -43,6 +45,7 @@ import { FieldModule } from './field/field.module';
     MatExpansionModule,
     MatIconModule,
     MatButtonModule,
+    MatStepperModule,
     FieldModule
   ],
     exports: [

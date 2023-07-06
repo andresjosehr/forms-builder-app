@@ -1,8 +1,8 @@
-<form>
+<form class="mx-auto w-200 my-12">
     <!-- Section -->
     <div class="grid sm:grid-cols-2 gap-8 w-full mb-8">
         <div class="w-full col-span-1">
-            <div class="text-3xl font-bold">Gestionar entidades</div>
+            <div class="text-3xl font-bold">Gestionar Formularios</div>
             <div class="text-secondary">
                 Gestiona las entidades de la aplicacion
             </div>
@@ -10,51 +10,44 @@
         <div class="col-span-1 relative"></div>
     </div>
 
-    <div [formGroup]="form">
+    <div [formGroup]="entityFG">
         <div class="flex w-full">
             <div class="w-1/2">Entidades</div>
             <div class="w-1/2 text-right">
-                <button (click)="addEntity({searchableList: 1}, true)" mat-flat-button class="bg-slate-500 text-white text-right">
+                <!-- <button (click)="addEntity({searchableList: 1}, true)" mat-flat-button class="bg-slate-500 text-white text-right">
                     <mat-icon>add</mat-icon>
                     Añadir entidad
-                </button>
+                </button> -->
             </div>
         </div>
-        <mat-accordion class="example-headers-align" multi *ngFor="let entity of entitiesFormArray.controls; let i = index">
+                <div class="flex w-full">
+                    <div class="flex gap-3 w-1/2">
+                        <mat-icon *ngIf="!entityFG.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                        <mat-icon *ngIf="entityFG.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                        <div class="text-xl text-black font-semibold">{{entityFG.get('label').value || 'Nombre de la entidad'}}</div>
+                    </div>
+                    <div class="w-1/2">
+                        <!-- <div class="w-fit ml-auto">
+                            <mat-icon (click)="deleteEntity($event, entityFG.get('id').value, i)" matTooltip="Eliminar entidad" class="text-red-500 cursor-pointer">delete</mat-icon>
+                        </div> -->
+                    </div>
+                </div>
 
-            <mat-expansion-panel class="mt-5">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <div class="flex w-full">
-                            <div class="flex gap-3 w-1/2">
-                                <mat-icon *ngIf="!entity.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
-                                <mat-icon *ngIf="entity.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
-                                <div class="text-xl text-black font-semibold">{{entity.get('label').value || 'Nombre de la entidad'}}</div>
-                            </div>
-                            <div class="w-1/2">
-                                <div class="w-fit ml-auto">
-                                    <mat-icon (click)="deleteEntity($event, entity.get('id').value, i)" matTooltip="Eliminar entidad" class="text-red-500 cursor-pointer">delete</mat-icon>
-                                </div>
-                            </div>
-                        </div>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <div [formGroup]="entity" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
+                <div [formGroup]="entityFG" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
                     <input type="hidden" formControlName="app_id">
                     <input type="hidden" formControlName="id">
                     <input type="hidden" formControlName="code">
                     <input type="hidden" formControlName="built_edition">
 
 
-                    <div class="col-span-2 text-center" [formGroup]="entity">
+                    <div class="col-span-2 text-center" [formGroup]="entityFG">
                         <mat-checkbox formControlName="build">Construir formulario</mat-checkbox>
                     </div>
                     <div class="col-span-1">
                         <mat-form-field class="w-full">
                             <mat-label>Nombre</mat-label>
                             <input id="text" type="text" formControlName="name" matInput />
-                            <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('name'))">
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entityFG.get('name'))">
                                 <ng-container *ngIf="entity.get('name').hasError(i)">
                                     {{ entity.get("name").errors[i] }}
                                 </ng-container>
@@ -65,7 +58,7 @@
                         <mat-form-field class="w-full">
                             <mat-label>Label</mat-label>
                             <input id="label" type="text" formControlName="label" matInput />
-                            <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('label'))">
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entityFG.get('label'))">
                                 <ng-container *ngIf="entity.get('label').hasError(i)">
                                     {{ entity.get("label").errors[i] }}
                                 </ng-container>
@@ -75,15 +68,15 @@
                     <div class="col-span-1">
                         <mat-form-field class="w-full">
                             <mat-label>Path</mat-label>
-                            <input id="path" type="text" formControlName="path" matInput />
-                            <mat-error *ngFor="let i of _globalService.errorsLength(entity.get('path'))">
-                                <ng-container *ngIf="entity.get('path').hasError(i)">
-                                    {{ entity.get("path").errors[i] }}
+                            <input id="frontend_path" type="text" formControlName="frontend_path" matInput />
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entityFG.get('frontend_path'))">
+                                <ng-container *ngIf="entity.get('frontend_path').hasError(i)">
+                                    {{ entity.get("frontend_path").errors[i] }}
                                 </ng-container>
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-span-1">
+                    <!-- <div class="col-span-1">
                         <label class="example-margin">Incluir campos de buFueda en la lista</label>
                         <div>
                             <mat-radio-group formControlName="searchable_list">
@@ -91,35 +84,66 @@
                                 <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
                             </mat-radio-group>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-span-2">
                         <hr>
                     </div>
                     <div class="col-span-2">
                         <div class="flex">
-                            <div class="text-xl text-black font-semibold"></div>
-                            <div class="w-1/2 text-xl text-black font-semibold">Campos</div>
+                            <div class="w-1/2 text-xl text-black font-semibold">Formulario</div>
+                            <div class="w-1/2 text-right">
+                                <button mat-flat-button class="bg-slate-500 text-white text-center" (click)="addStep()">+ Añadir paso de formulario</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-span-2 mt-3" *ngFor="let field of getFields(i).controls; let fieldIndex = index">
-                        <app-field
-                        [field]="field"
-                        [options]="options"
-                        [entitiesFormArray]="entitiesFormArray"
-                        [entityFormGroup]="entity"
-                        [fieldIndex]="fieldIndex"></app-field>
+                    <div class="col-span-2 mt-3">
+
+
+                    <mat-stepper [linear]="true" #stepper class="rounded-xl">
+                      <mat-step *ngFor="let step of getSteps().controls">
+                        <form>
+                          <ng-template matStepLabel>{{step.get('label').value || 'Paso #'+step.get('order').value}}</ng-template>
+
+                          <div [formGroup]="step">
+                            <mat-form-field class="w-full">
+                                <mat-label>Nombre del paso</mat-label>
+                                <input matInput type="text" formControlName="label">
+                            </mat-form-field>
+                          </div>
+
+
+                            <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index">
+                                <ng-container *ngIf="field.get('step').value===step.get('order').value">
+                                    <app-field
+                                    [field]="field"
+                                    [options]="options"
+                                    [entityFG]="entityFG"
+                                    [fieldIndex]="fieldIndex"></app-field>
+                                </ng-container>
+                            </div>
+
+
+                            <div class="w-full flex mt-3">
+                            <div class="w-1/2 text-left">
+                                <button (click)="addField({}, step.get('order').value)" mat-flat-button class="bg-cyan-500 text-white text-right">
+                                    <mat-icon>add</mat-icon>
+                                    Añadir campo
+                                </button>
+                            </div>
+
+                            <div class="w-1/2 text-right">
+                                <button class="shadow" mat-button matStepperNext>Next ></button>
+                            </div>
+                          </div>
+
+                        </form>
+                      </mat-step>
+                    </mat-stepper>
                     </div>
 
-                    <div class="col-span-2 text-center mt-4">
-                        <button (click)="addField(i)" mat-flat-button class="bg-slate-500 text-white text-right">
-                            <mat-icon>add</mat-icon>
-                            Añadir campo
-                        </button>
-                    </div>
-
-                    <div class="col-span-2">
+                    <!-- <div class="col-span-2">
                         <hr>
                     </div>
                     <div class="col-span-2">
@@ -133,9 +157,9 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="col-span-2 mt-3" *ngFor="let relationship of getRelationships(i)?.controls">
+                    <!-- <div class="col-span-2 mt-3" *ngFor="let relationship of getRelationships(i)?.controls">
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel style="background: #e5effd">
                             <mat-expansion-panel-header>
@@ -180,11 +204,9 @@
 
                             </mat-expansion-panel>
                         </mat-accordion>
-                    </div>
+                    </div> -->
                 </div>
 
-            </mat-expansion-panel>
-        </mat-accordion>
 
 
         <mat-accordion class="example-headers-align" multi>
