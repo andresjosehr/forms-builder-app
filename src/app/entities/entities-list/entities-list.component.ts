@@ -8,6 +8,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { App } from '../app';
 import { AppService } from '../service/app.service';
 import { ManageEntitiesService } from '../service/manage-entities.service';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-entities-list',
   templateUrl: './entities-list.component.html',
@@ -30,6 +31,7 @@ export class RealEntitiesListComponent extends EntitiesListComponent<App>{
     protected _userService: UserService,
     protected _service: ManageEntitiesService,
     protected _fuseConfirmationService: FuseConfirmationService,
+    public dialog: MatDialog
   ) {
     const searchFormGroup = _formBuilder.group({
         searchString: [],
@@ -37,4 +39,48 @@ export class RealEntitiesListComponent extends EntitiesListComponent<App>{
     });
     super(_activatedRoute, _router, _formBuilder, _globalService, _userService, _fuseConfirmationService, searchFormGroup, _service, 'Fromularios', 'Formulario');
   }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(PickLayoutComponent, {
+        width: '550px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
 }
+
+
+
+
+@Component({
+    selector: 'app-pick-layout',
+    template: `
+        <div>
+            <div class='text-3xl font-semibold text-center'>Elige un layout para el formulario</div>
+            <div class='flex w-full gap-5 mt-8'>
+                <div class='w-1/2'>
+                    <button (click)="pick('/formularios/crear')" class="w-full rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Layout 1</button>
+                </div>
+                <div class='w-1/2'>
+                    <button class="w-full rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Layout 2</button>
+                </div>
+            </div>
+        </div>
+    `,
+})
+  export class PickLayoutComponent {
+
+    constructor(
+        public _router: Router,
+        public dialogRef: MatDialog,
+    ) { }
+
+    pick(url): void {
+        this._router.navigate([url]);
+        this.dialogRef.closeAll();
+    }
+
+  }

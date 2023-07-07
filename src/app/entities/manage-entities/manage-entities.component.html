@@ -2,7 +2,7 @@
     <!-- Section -->
     <div class="grid sm:grid-cols-2 gap-8 w-full mb-8">
         <div class="w-full col-span-1">
-            <div class="text-3xl font-bold">Gestionar Formularios</div>
+            <div class="text-3xl font-bold">Gestionar Formulario</div>
             <div class="text-secondary">
                 Gestiona las entidades de la aplicacion
             </div>
@@ -38,7 +38,6 @@
                     <input type="hidden" formControlName="id">
                     <input type="hidden" formControlName="code">
                     <input type="hidden" formControlName="built_edition_layout_1">
-                    <input type="hidden" formControlName="built_edition_layout_2">
 
 
                     <div class="col-span-2 text-center hidden" [formGroup]="entityFG">
@@ -224,13 +223,7 @@
         <button
         (click)="preCreateEntity(1)"
          class="ml-4" mat-flat-button type="button" [color]="'primary'">
-            Guardar y renderizar formulario tipo 1
-        </button>
-
-        <button
-        (click)="preCreateEntity(2)"
-         class="ml-4" mat-flat-button type="button" [color]="'primary'">
-            Guardar y renderizar formulario tipo 2
+            Guardar y renderizar formulario
         </button>
     </div>
 

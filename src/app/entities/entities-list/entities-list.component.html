@@ -6,7 +6,8 @@
 		</div>
 		<div class="w-full col-span-1">
 			<div class='sm:text-right'>
-				<button [routerLink]="'/formularios/crear'" class="w-full sm:w-fit rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Crear aplicacion</button>
+                <!-- [routerLink]="'/formularios/crear'" -->
+				<button (click)="openDialog()" class="w-full sm:w-fit rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Crear aplicacion</button>
 			</div>
 		</div>
 		<div class="w-full col-span-1">
