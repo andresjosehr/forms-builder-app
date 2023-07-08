@@ -22,8 +22,8 @@
         </div>
                 <div class="flex w-full">
                     <div class="flex gap-3 w-1/2">
-                        <mat-icon *ngIf="!entityFG.get('built_edition_layout_1').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
-                        <mat-icon *ngIf="entityFG.get('built_edition_layout_1').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                        <mat-icon *ngIf="!entityFG.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                        <mat-icon *ngIf="entityFG.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
                         <div class="text-xl text-black font-semibold">{{entityFG.get('label').value || 'Nombre de la entidad'}}</div>
                     </div>
                     <div class="w-1/2">
@@ -37,7 +37,8 @@
                     <input type="hidden" formControlName="app_id">
                     <input type="hidden" formControlName="id">
                     <input type="hidden" formControlName="code">
-                    <input type="hidden" formControlName="built_edition_layout_1">
+                    <input type="hidden" formControlName="layout">
+                    <input type="hidden" formControlName="built_edition">
 
 
                     <div class="col-span-2 text-center hidden" [formGroup]="entityFG">

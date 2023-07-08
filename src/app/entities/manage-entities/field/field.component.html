@@ -4,8 +4,8 @@
         <mat-panel-title>
             <div class="flex w-full">
                 <div class="flex gap-3 w-1/2">
-                    <mat-icon *ngIf="!field.get('built_edition_layout_1').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
-                    <mat-icon *ngIf="field.get('built_edition_layout_1').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                    <mat-icon *ngIf="!field.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                    <mat-icon *ngIf="field.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
                     <div class="text-xl text-black font-semibold">{{ field.get('label').value || 'Nombre del campo' }}</div>
                 </div>
                 <div class="w-1/2">
@@ -21,8 +21,7 @@
     <div [formGroup]="field" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
         <input type="hidden" formControlName="id">
         <input type="hidden" formControlName="code">
-        <input type="hidden" formControlName="built_edition_layout_1">
-        <input type="hidden" formControlName="built_edition_layout_2">
+        <input type="hidden" formControlName="built_edition">
         <div class="col-span-1">
             <mat-form-field class="w-full">
                 <mat-label>Nombre</mat-label>
