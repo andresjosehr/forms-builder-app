@@ -74,6 +74,7 @@ export class ManageEntityComponent<Entity> {
                     this.afterCreateEntity.next({response, error: false});
                     // this.entityFormGroup.enable();
                     // navigate with query params
+                    this._globalService.openSnackBar( 'Informacion guardada exitosamente', 2500, 'success' );
                     if(redirectAfterCreated){
                         this._router.navigate([`/${this.dasherizedEntity}/lista`,{ m: 1 }]);
                     }

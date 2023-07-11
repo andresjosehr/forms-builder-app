@@ -7,7 +7,7 @@
 		<div class="w-full col-span-1">
 			<div class='sm:text-right'>
                 <!-- [routerLink]="'/formularios/crear'" -->
-				<button (click)="openDialog()" class="w-full sm:w-fit rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Crear aplicacion</button>
+				<button (click)="openDialog()" class="w-full sm:w-fit rounded mr-1 px-3 bg-primary-300 text-on-primary-300" mat-stroked-button>Crear formulario</button>
 			</div>
 		</div>
 		<div class="w-full col-span-1">
@@ -81,13 +81,22 @@
                 </td>
               </ng-container>
 
+              <ng-container matColumnDef="layout">
+                <th mat-header-cell *matHeaderCellDef>Layout</th>
+                <td data-label="Dirección" mat-cell *matCellDef="let entity" class="px-4">
+                  <span class="font-medium">
+                    {{entity.layout || "-"}}
+                  </span>
+                </td>
+              </ng-container>
+
 				<!-- Acciones -->
 				<ng-container matColumnDef="actions">
 					<th mat-header-cell *matHeaderCellDef>Acciones</th>
-					<td data-label="Acciones" mat-cell *matCellDef="let app">
+					<td data-label="Acciones" mat-cell *matCellDef="let entity">
 						<div class="flex justify-end gap-2">
 							<div class="1/2">
-									<mat-icon [routerLink]="'/formularios/editar/'+app.id" class="text-on-primary-300">edit</mat-icon>
+									<mat-icon [routerLink]="'/formularios/editar-formulario-'+entity.layout+'/'+entity.id" class="text-on-primary-300">edit</mat-icon>
 							</div>
 						<div class="1/2">
 									<mat-icon (click)="confirmDestroy(app.id)" class="text-red-500">delete</mat-icon>

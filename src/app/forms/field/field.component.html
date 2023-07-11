@@ -71,7 +71,21 @@
             </mat-form-field>
         </div>
 
-        <div class="col-span-2">
+        <div class="col-span-2" *ngIf="field.get('input_type_id').value===9">
+            <mat-form-field class="w-full">
+                <mat-label>Entidad Relacionada</mat-label>
+                <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
+                    <mat-option *ngFor="let entity of options?.entities" [value]="entity.id">{{entity.label}}</mat-option>
+                </mat-select>
+                <mat-error *ngFor="let i of _globalService.errorsLength(field.get('related_entity_id'))">
+                    <ng-container *ngIf="field.get('related_entity_id').hasError(i)">
+                        {{ field.get("related_entity_id").errors[i] }}
+                    </ng-container>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-span-2" *ngIf="field.get('input_type_id').value===5 || field.get('input_type_id').value===7">
             <mat-form-field class="w-full">
                 <mat-label>Opciones del campo (Separadas por coma)</mat-label>
                 <input id="options" type="text" formControlName="options" matInput />

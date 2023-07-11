@@ -2,7 +2,7 @@
     <!-- Section -->
     <div class="grid sm:grid-cols-2 gap-8 w-full mb-8">
         <div class="w-full col-span-1">
-            <div class="text-3xl font-bold">Gestionar Formulario</div>
+            <div class="text-3xl font-bold">Gestionar Formulario Tipo 2</div>
             <div class="text-secondary">
                 Gestiona las entidades de la aplicacion
             </div>
@@ -66,82 +66,38 @@
                             </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-span-1">
-                        <mat-form-field class="w-full">
-                            <mat-label>Path</mat-label>
-                            <input id="frontend_path" type="text" formControlName="frontend_path" matInput />
-                            <mat-error *ngFor="let i of _globalService.errorsLength(entityFG.get('frontend_path'))">
-                                <ng-container *ngIf="entity.get('frontend_path').hasError(i)">
-                                    {{ entity.get("frontend_path").errors[i] }}
-                                </ng-container>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-                    <!-- <div class="col-span-1">
-                        <label class="example-margin">Incluir campos de buFueda en la lista</label>
-                        <div>
-                            <mat-radio-group formControlName="searchable_list">
-                                <mat-radio-button class="example-margin" [value]="true">Si</mat-radio-button>
-                                <mat-radio-button class="example-margin" [value]="false">No</mat-radio-button>
-                            </mat-radio-group>
-                        </div>
-                    </div> -->
 
                     <div class="col-span-2">
                         <hr>
                     </div>
-                    <div class="col-span-2">
-                        <div class="flex">
-                            <div class="w-1/2 text-xl text-black font-semibold">Formulario</div>
-                            <div class="w-1/2 text-right">
-                                <button mat-flat-button class="bg-slate-500 text-white text-center" (click)="addStep()">+ Añadir paso de formulario</button>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="col-span-2 mt-3">
 
-
-                    <mat-stepper [linear]="true" #stepper class="rounded-xl">
-                      <mat-step *ngFor="let step of getSteps().controls">
                         <form>
-                          <ng-template matStepLabel>{{step.get('label').value || 'Paso #'+step.get('order').value}}</ng-template>
 
-                          <div [formGroup]="step">
-                            <mat-form-field class="w-full">
-                                <mat-label>Nombre del paso</mat-label>
-                                <input matInput type="text" formControlName="label">
-                            </mat-form-field>
-                          </div>
 
 
                             <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index">
-                                <ng-container *ngIf="field.get('step').value===step.get('order').value">
                                     <app-field
                                     [field]="field"
                                     [options]="options"
                                     [entityFG]="entityFG"
                                     [fieldIndex]="fieldIndex"></app-field>
-                                </ng-container>
                             </div>
 
 
                             <div class="w-full flex mt-3">
                             <div class="w-1/2 text-left">
-                                <button (click)="addField({}, step.get('order').value)" mat-flat-button class="bg-cyan-500 text-white text-right">
+                                <button (click)="addField({})" mat-flat-button class="bg-cyan-500 text-white text-right">
                                     <mat-icon>add</mat-icon>
                                     Añadir campo
                                 </button>
                             </div>
 
-                            <div class="w-1/2 text-right">
-                                <button class="shadow" mat-button matStepperNext>Next ></button>
-                            </div>
                           </div>
 
                         </form>
-                      </mat-step>
-                    </mat-stepper>
+
                     </div>
 
                     <!-- <div class="col-span-2">

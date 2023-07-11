@@ -11,14 +11,14 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
-import { PickLayoutComponent, RealEntitiesListComponent } from './entities-list.component';
+import { PickLayoutComponent, FormsListComponent } from './forms-list.component';
 import { AppService } from '../service/app.service';
 import {MatDialogModule} from '@angular/material/dialog';
 
 
 @NgModule({
   declarations: [
-    RealEntitiesListComponent,
+    FormsListComponent,
     PickLayoutComponent
   ],
   imports: [
@@ -39,4 +39,4 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatDialogModule
   ]
 })
-export class RealEntitiesListModule { }
+export class FormsListModule { }

@@ -1,0 +1,233 @@
+<form class="mx-auto w-200 my-12">
+    <!-- Section -->
+    <div class="grid sm:grid-cols-2 gap-8 w-full mb-8">
+        <div class="w-full col-span-1">
+            <div class="text-3xl font-bold">Gestionar Formulario Tipo 1</div>
+            <div class="text-secondary">
+                Gestiona las entidades de la aplicacion
+            </div>
+        </div>
+        <div class="col-span-1 relative"></div>
+    </div>
+
+    <div [formGroup]="entityFG">
+        <div class="flex w-full">
+            <div class="w-1/2">Entidades</div>
+            <div class="w-1/2 text-right">
+                <!-- <button (click)="addEntity({searchableList: 1}, true)" mat-flat-button class="bg-slate-500 text-white text-right">
+                    <mat-icon>add</mat-icon>
+                    Añadir entidad
+                </button> -->
+            </div>
+        </div>
+                <div class="flex w-full">
+                    <div class="flex gap-3 w-1/2">
+                        <mat-icon *ngIf="!entityFG.get('built_edition').value" matTooltip="Esta campo no ha sido renderizado desde la ultima vez que se edito" class="text-red-500">error_outline</mat-icon>
+                        <mat-icon *ngIf="entityFG.get('built_edition').value" matTooltip="Renderizado" class="text-green-500">check_circle_outline</mat-icon>
+                        <div class="text-xl text-black font-semibold">{{entityFG.get('label').value || 'Nombre de la entidad'}}</div>
+                    </div>
+                    <div class="w-1/2">
+                        <!-- <div class="w-fit ml-auto">
+                            <mat-icon (click)="deleteEntity($event, entityFG.get('id').value, i)" matTooltip="Eliminar entidad" class="text-red-500 cursor-pointer">delete</mat-icon>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div [formGroup]="entityFG" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
+                    <input type="hidden" formControlName="app_id">
+                    <input type="hidden" formControlName="id">
+                    <input type="hidden" formControlName="code">
+                    <input type="hidden" formControlName="layout">
+                    <input type="hidden" formControlName="built_edition">
+
+
+                    <div class="col-span-2 text-center hidden" [formGroup]="entityFG">
+                        <mat-checkbox formControlName="build">Construir formulario</mat-checkbox>
+                    </div>
+                    <div class="col-span-1">
+                        <mat-form-field class="w-full">
+                            <mat-label>Nombre</mat-label>
+                            <input id="text" type="text" formControlName="name" matInput />
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entityFG.get('name'))">
+                                <ng-container *ngIf="entity.get('name').hasError(i)">
+                                    {{ entity.get("name").errors[i] }}
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-span-1">
+                        <mat-form-field class="w-full">
+                            <mat-label>Label</mat-label>
+                            <input id="label" type="text" formControlName="label" matInput />
+                            <mat-error *ngFor="let i of _globalService.errorsLength(entityFG.get('label'))">
+                                <ng-container *ngIf="entity.get('label').hasError(i)">
+                                    {{ entity.get("label").errors[i] }}
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-span-2">
+                        <hr>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="flex">
+                            <div class="w-1/2 text-xl text-black font-semibold">Formulario</div>
+                            <div class="w-1/2 text-right">
+                                <button mat-flat-button class="bg-slate-500 text-white text-center" (click)="addStep()">+ Añadir paso de formulario</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 mt-3">
+
+
+                    <mat-stepper [linear]="true" #stepper class="rounded-xl">
+                      <mat-step *ngFor="let step of getSteps().controls">
+                        <form>
+                          <ng-template matStepLabel>{{step.get('label').value || 'Paso #'+step.get('order').value}}</ng-template>
+
+                          <div [formGroup]="step">
+                            <mat-form-field class="w-full">
+                                <mat-label>Nombre del paso</mat-label>
+                                <input matInput type="text" formControlName="label">
+                            </mat-form-field>
+                          </div>
+
+
+                            <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index">
+                                <ng-container *ngIf="field.get('step').value===step.get('order').value">
+                                    <app-field
+                                    [field]="field"
+                                    [options]="options"
+                                    [entityFG]="entityFG"
+                                    [fieldIndex]="fieldIndex"></app-field>
+                                </ng-container>
+                            </div>
+
+
+                            <div class="w-full flex mt-3">
+                            <div class="w-1/2 text-left">
+                                <button (click)="addField({}, step.get('order').value)" mat-flat-button class="bg-cyan-500 text-white text-right">
+                                    <mat-icon>add</mat-icon>
+                                    Añadir campo
+                                </button>
+                            </div>
+
+                            <div class="w-1/2 text-right">
+                                <button class="shadow" mat-button matStepperNext>Next ></button>
+                            </div>
+                          </div>
+
+                        </form>
+                      </mat-step>
+                    </mat-stepper>
+                    </div>
+
+                    <!-- <div class="col-span-2">
+                        <hr>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="flex">
+                            <div class="text-xl text-black font-semibold"></div>
+                            <div class="w-1/2 text-xl text-black font-semibold">Relaciones</div>
+                            <div class="w-1/2 text-right">
+                                <button (click)="addRelationship(i)" mat-flat-button class="bg-slate-500 text-white text-right">
+                                    <mat-icon>add</mat-icon>
+                                    Añadir Relacion
+                                </button>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="col-span-2 mt-3" *ngFor="let relationship of getRelationships(i)?.controls">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel style="background: #e5effd">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <div class="text-xl text-black font-semibold">
+                                        {{ 'Relación' }}
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div [formGroup]="relationship" class="grid sm:grid-cols-2 gap-y-1 gap-x-5 w-full mt-8">
+                                <input type="hidden"  formControlName="id">
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Entidad</mat-label>
+                                        <mat-select id="related_entity_id" type="text" formControlName="related_entity_id">
+                                            <mat-option *ngFor="let entity of entitiesFormArray.controls" [value]="entity.get('code').value">{{entity.get('label').value}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(relationship.get('related_entity_id'))">
+                                            <ng-container *ngIf="relationship.get('related_entity_id').hasError(i)">
+                                                {{ relationship.get("related_entity_id").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-1">
+                                    <mat-form-field class="w-full">
+                                        <mat-label>Tipo de relación</mat-label>
+                                        <mat-select id="relation_type_id" type="text" formControlName="relation_type_id">
+                                            <mat-option *ngFor="let relationType of options?.relation_types" [value]="relationType.id">{{relationType.name}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngFor="let i of _globalService.errorsLength(relationship.get('relation_type_id'))">
+                                            <ng-container *ngIf="relationship.get('relation_type_id').hasError(i)">
+                                                {{ relationship.get("relation_type_id").errors[i] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div> -->
+                </div>
+
+
+    </div>
+
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-between">
+        <button
+        (click)="preCreateEntity()"
+         class="ml-4" mat-flat-button type="button" [color]="'primary'">
+            Guardar
+        </button>
+
+        <button
+        (click)="preCreateEntity(true)"
+         class="ml-4" mat-flat-button type="button" [color]="'primary'">
+            Guardar y renderizar formulario
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div>
+        <div
+            id="output"
+            class="fira-code text-sm max-h-120 overflow-auto mt-10"
+            style="
+                background: #e5e5e5;
+                border-radius: 10px;
+                padding: 30px;
+                text-align: left;
+                border: 2px solid gray;
+                display: flex;
+                flex-direction: column;
+            "
+        >
+            <div>Output:</div>
+            <pre>
+                {{processOutput}}
+                <hr>
+            </pre>
+        </div>
+    </div>
+</form>

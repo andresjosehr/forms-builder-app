@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ManageEntitiesService extends GenericServiceService<any> {
+export class FormsService extends GenericServiceService<any> {
 
   constructor(
     private _http: HttpClient

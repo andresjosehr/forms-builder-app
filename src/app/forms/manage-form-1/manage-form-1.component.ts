@@ -7,13 +7,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, from } from 'rxjs';
-import { ManageEntitiesService } from '../service/manage-entities.service';
+import { FormsService } from '../service/forms.service';
 
 @Component({
-  selector: 'app-manage-entities',
-  templateUrl: './manage-entities.component.html'
+  selector: 'app-manage-form-1',
+  templateUrl: './manage-form-1.component.html'
 })
-export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
+export class ManageForm1Component extends ManageEntityComponent<any> {
 
     options;
     entityFG: FormGroup;
@@ -22,7 +22,7 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
     processOutput;
 
     constructor(
-        public _service: ManageEntitiesService,
+        public _service: FormsService,
         public _formBuilder: FormBuilder,
         public _globalService: GlobalService,
         public _activatedRoute: ActivatedRoute,
@@ -35,10 +35,9 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             id: [],
             app_id: [],
             code: [],
-            build: [],
-            built_edition: [],
+            build: [false],
+            built_edition: [false],
             name: [],
-            frontend_path: ['src/app'],
             label: [],
             layout: [1],
             steps: _formBuilder.array([]),
@@ -82,6 +81,7 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
 
         this.afterCreateEntity.subscribe(({response, error}) => {
             this.creatingEntity = false;
+            this.entityFG.get('build').setValue(false, {emitEvent: false});
             if(!error){
                 this.fillValues(response.data);
             }
@@ -130,6 +130,7 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
             name: [field.name || ''],
             built_edition: [field.built_edition || 0],
             label: [field.label || '', Validators.required],
+            related_entity_id: [null],
             field_type_id: [field.field_type_id || 1, Validators.required],
             input_type_id: [field.input_type_id || 1, Validators.required],
             searchable: [searchable, Validators.required],
@@ -223,7 +224,7 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
                 if (this.creatingEntity) {
                     this.checkLog();
                 }
-            }, 100);
+            }, 1000);
         } catch (error) {
             setTimeout(() => {
                 if (this.creatingEntity) {
@@ -249,9 +250,9 @@ export class ManageRealEntitiesComponent extends ManageEntityComponent<any> {
         return result;
       }
 
-      preCreateEntity(layout = null){
+      preCreateEntity(build = false){
 
-        if(layout == 1){
+        if(build){
             this.entityFG.get('build').setValue(true, {emitEvent: false});
             this.entityFG.get('built_edition').setValue(false, {emitEvent: false});
         }

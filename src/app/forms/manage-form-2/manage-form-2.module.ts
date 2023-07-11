@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ManageRealEntitiesComponent } from './manage-entities.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -15,8 +14,9 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { FieldModule } from './field/field.module';
 import {MatStepperModule} from '@angular/material/stepper';
+import { ManageForm2Component } from './manage-form-2.component';
+import { FieldModule } from '../field/field.module';
 
 
 
@@ -26,7 +26,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
-    ManageRealEntitiesComponent
+    ManageForm2Component
   ],
   imports: [
     CommonModule,
@@ -49,7 +49,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     FieldModule
   ],
     exports: [
-        ManageRealEntitiesComponent
+        ManageForm2Component
     ]
 })
-export class ManageRealEntitiesModule { }
+export class ManageForm2Module { }
