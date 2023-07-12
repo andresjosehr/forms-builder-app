@@ -23,5 +23,9 @@ export class FormsService extends GenericServiceService<any> {
         return this._http.get<any>(`${environment.api}/delete-field/${id}`);
     }
 
+    deleteStep(id): Observable<any>{
+        return this._http.delete<any>(`${environment.api}/step/${id}`);
+    }
+
 
 }

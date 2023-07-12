@@ -8,10 +8,25 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, from } from 'rxjs';
 import { FormsService } from '../service/forms.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-manage-form-1',
-  templateUrl: './manage-form-1.component.html'
+  templateUrl: './manage-form-1.component.html',
+  styles: [`
+  .cdk-drag {
+    transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .cdk-drag.cdk-drag-animating {
+    transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    .cdk-drop-list-dragging .cdk-drag {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+
+  `]
 })
 export class ManageForm1Component extends ManageEntityComponent<any> {
 
@@ -20,6 +35,7 @@ export class ManageForm1Component extends ManageEntityComponent<any> {
 
     creatingEntity: boolean = false;
     processOutput;
+    changed = true;
 
     constructor(
         public _service: FormsService,
@@ -59,6 +75,7 @@ export class ManageForm1Component extends ManageEntityComponent<any> {
 
         this.afterGetEntity.subscribe((entity) => {
             this.creatingEntity = false;
+            this.changed = false;
                 this.entityFG.patchValue(entity, {emitEvent: false});
 
                 entity.steps.forEach((step) => {
@@ -70,6 +87,7 @@ export class ManageForm1Component extends ManageEntityComponent<any> {
                 });
 
                 this.entityFG.valueChanges.subscribe((value) => {
+                    this.changed = true;
                     this.entityFG.get('built_edition').setValue(0, {emitEvent: false});
                 });
             // entities.forEach((entity, i) => {
@@ -80,6 +98,7 @@ export class ManageForm1Component extends ManageEntityComponent<any> {
         });
 
         this.afterCreateEntity.subscribe(({response, error}) => {
+            this.changed = false;
             this.creatingEntity = false;
             this.entityFG.get('build').setValue(false, {emitEvent: false});
             if(!error){
@@ -258,5 +277,49 @@ export class ManageForm1Component extends ManageEntityComponent<any> {
         }
 
         this.createEntity(false)
+      }
+
+      deleteStep(event, i: number): void{
+        event.stopPropagation();
+        event.preventDefault();
+
+        this._globalService.confirmationDialog('¿Estas seguro de eliminar este paso?,  se eliminaran todos los campos asociados a este paso').then((result) => {
+            console.log(result);
+            if(!result){
+                return;
+            }
+
+            console.log('Paso');
+
+            this.getFields().controls.forEach((field, index) => {
+                if(field.get('step').value != i+1){
+                   return;
+                }
+                if(field.get('id').value){
+                    this._service.deleteField(field.get('id').value).subscribe((response) => {
+
+                    });
+                }
+                this.getFields().removeAt(index);
+            });
+
+            if(this.getSteps().controls[i].get('id').value){
+                this._service.deleteStep(this.getSteps().controls[i].get('id').value).subscribe((response) => {
+                    this._globalService.openSnackBar('Paso eliminado correctamente');
+                });
+            }
+
+            this.getSteps().removeAt(i);
+        });
+
+      }
+
+
+      drop(event: CdkDragDrop<string[]>) {
+
+        const fields = this.getFields().controls;
+        moveItemInArray(fields, event.previousIndex, event.currentIndex);
+        this.entityFG.setControl('fields', this._formBuilder.array(fields));
+        console.log(this.entityFG.value);
       }
 }

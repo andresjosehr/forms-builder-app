@@ -13,7 +13,7 @@ export class FieldComponent {
     @Input() options: any;
     @Input() entitiesFormArray: any;
     @Input() fieldIndex: number;
-    @Input() entityFormGroup: FormGroup;
+    @Input() entityFG: FormGroup;
 
 
     validationControl: FormControl = new FormControl();
@@ -41,8 +41,6 @@ export class FieldComponent {
                 this.validationControl.setValue(null);
             }
         });
-
-        console.log(this.validations);
     }
 
     get validations(): FormArray {
@@ -73,7 +71,7 @@ export class FieldComponent {
         event.preventDefault();
         event.stopPropagation();
 
-        this._globalService.confirmationDialog(`Seguro que quieras eliminar esta entidad? ID: ${id}, index: ${this.fieldIndex}`).then((result) => {
+        this._globalService.confirmationDialog(`Seguro que quieras eliminar esta entidad?`).then((result) => {
 
             if(!result){
                 return;
@@ -81,13 +79,13 @@ export class FieldComponent {
 
             if(!id){
 
-                (this.entityFormGroup.get('fields') as FormArray).removeAt(this.fieldIndex);
+                (this.entityFG.get('fields') as FormArray).removeAt(this.fieldIndex);
                 this._globalService.openSnackBar('Entidad eliminada correctamente');
                 return;
             }
 
             this._service.deleteField(id).subscribe((response) => {
-                (this.entityFormGroup.get('fields') as FormArray).removeAt(this.fieldIndex);
+                (this.entityFG.get('fields') as FormArray).removeAt(this.fieldIndex);
                 this._globalService.openSnackBar('Entidad eliminada correctamente');
             });
         });

@@ -19,6 +19,7 @@ export class ManageForm2Component extends ManageEntityComponent<any> {
     entityFG: FormGroup;
 
     creatingEntity: boolean = false;
+    changed = true;
     processOutput;
 
     constructor(
@@ -59,6 +60,7 @@ export class ManageForm2Component extends ManageEntityComponent<any> {
 
         this.afterGetEntity.subscribe((entity) => {
             this.creatingEntity = false;
+                this.changed = false;
                 this.entityFG.patchValue(entity, {emitEvent: false});
 
 
@@ -67,6 +69,7 @@ export class ManageForm2Component extends ManageEntityComponent<any> {
                 });
 
                 this.entityFG.valueChanges.subscribe((value) => {
+                    this.changed = true;
                     this.entityFG.get('built_edition').setValue(0, {emitEvent: false});
                 });
             // entities.forEach((entity, i) => {

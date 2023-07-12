@@ -82,46 +82,50 @@
                     <div class="col-span-2 mt-3">
 
 
-                    <mat-stepper [linear]="true" #stepper class="rounded-xl">
-                      <mat-step *ngFor="let step of getSteps().controls">
-                        <form>
-                          <ng-template matStepLabel>{{step.get('label').value || 'Paso #'+step.get('order').value}}</ng-template>
+                        <mat-stepper [linear]="true" #stepper class="rounded-xl">
+                            <mat-step *ngFor="let step of getSteps().controls; let st = index">
+                              <form>
+                                <ng-template matStepLabel>
+                                  {{step.get('label').value || 'Paso #'+step.get('order').value}}
+                                  <mat-icon (click)="deleteStep($event, st)" matTooltip="Eliminar entidad" class="text-red-500 cursor-pointer">delete</mat-icon>
+                                </ng-template>
 
-                          <div [formGroup]="step">
-                            <mat-form-field class="w-full">
-                                <mat-label>Nombre del paso</mat-label>
-                                <input matInput type="text" formControlName="label">
-                            </mat-form-field>
-                          </div>
+                                <div [formGroup]="step">
+                                  <mat-form-field class="w-full">
+                                    <mat-label>Nombre del paso</mat-label>
+                                    <input matInput type="text" formControlName="label">
+                                  </mat-form-field>
+                                </div>
 
+                                <div cdkDropList (cdkDropListDropped)="drop($event)">
+                                  <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index" cdkDrag>
+                                    <ng-container *ngIf="field.get('step').value===step.get('order').value">
+                                      <app-field
+                                        [field]="field"
+                                        [options]="options"
+                                        [entityFG]="entityFG"
+                                        [fieldIndex]="fieldIndex"></app-field>
+                                    </ng-container>
+                                  </div>
+                                </div>
 
-                            <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index">
-                                <ng-container *ngIf="field.get('step').value===step.get('order').value">
-                                    <app-field
-                                    [field]="field"
-                                    [options]="options"
-                                    [entityFG]="entityFG"
-                                    [fieldIndex]="fieldIndex"></app-field>
-                                </ng-container>
-                            </div>
+                                <div class="w-full flex mt-3">
+                                  <div class="w-1/2 text-left">
+                                    <button (click)="addField({}, step.get('order').value)" mat-flat-button class="bg-cyan-500 text-white text-right">
+                                      <mat-icon>add</mat-icon>
+                                      Añadir campo
+                                    </button>
+                                  </div>
 
+                                  <div class="w-1/2 text-right">
+                                    <button class="shadow" mat-button matStepperNext>Next ></button>
+                                  </div>
+                                </div>
 
-                            <div class="w-full flex mt-3">
-                            <div class="w-1/2 text-left">
-                                <button (click)="addField({}, step.get('order').value)" mat-flat-button class="bg-cyan-500 text-white text-right">
-                                    <mat-icon>add</mat-icon>
-                                    Añadir campo
-                                </button>
-                            </div>
+                              </form>
+                            </mat-step>
+                          </mat-stepper>
 
-                            <div class="w-1/2 text-right">
-                                <button class="shadow" mat-button matStepperNext>Next ></button>
-                            </div>
-                          </div>
-
-                        </form>
-                      </mat-step>
-                    </mat-stepper>
                     </div>
 
                     <!-- <div class="col-span-2">

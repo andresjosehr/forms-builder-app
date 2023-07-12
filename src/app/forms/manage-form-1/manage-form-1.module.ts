@@ -17,6 +17,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatStepperModule} from '@angular/material/stepper';
 import { ManageForm1Component } from './manage-form-1.component';
 import { FieldModule } from '../field/field.module';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 
 
 
@@ -46,7 +48,8 @@ import { FieldModule } from '../field/field.module';
     MatIconModule,
     MatButtonModule,
     MatStepperModule,
-    FieldModule
+    DragDropModule,
+    FieldModule,
   ],
     exports: [
         ManageForm1Component
