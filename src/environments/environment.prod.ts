@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    api: 'http://apps-management.test/api/public/api'
+    api: 'http://molano.test/apps-management/api/public/api'
 };

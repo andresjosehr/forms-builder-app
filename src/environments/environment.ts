@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    base: 'http://apps-management.test/api/public/',
-    api: 'http://apps-management.test/api/public/api'
+    base: 'http://molano.test/apps-management/api/public',
+    api: 'http://molano.test/apps-management/api/public/api'
 };
