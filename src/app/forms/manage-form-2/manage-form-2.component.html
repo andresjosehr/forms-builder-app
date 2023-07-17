@@ -76,13 +76,14 @@
                         <form>
 
 
-
-                            <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index">
-                                    <app-field
-                                    [field]="field"
-                                    [options]="options"
-                                    [entityFG]="entityFG"
-                                    [fieldIndex]="fieldIndex"></app-field>
+                            <div cdkDropList (cdkDropListDropped)="drop($event)">
+                                <div class="col-span-2 mt-3" *ngFor="let field of getFields().controls; let fieldIndex = index" cdkDrag>
+                                        <app-field
+                                        [field]="field"
+                                        [options]="options"
+                                        [entityFG]="entityFG"
+                                        [fieldIndex]="fieldIndex"></app-field>
+                                </div>
                             </div>
 
 

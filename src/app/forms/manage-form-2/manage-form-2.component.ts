@@ -8,6 +8,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, from } from 'rxjs';
 import { FormsService } from '../service/forms.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-manage-form-2',
@@ -245,5 +246,11 @@ export class ManageForm2Component extends ManageEntityComponent<any> {
         }
 
         this.createEntity(false)
+      }
+
+      drop(event: CdkDragDrop<string[]>) {
+        const fields = this.getFields().controls;
+        moveItemInArray(fields, event.previousIndex, event.currentIndex);
+        this.entityFG.setControl('fields', this._formBuilder.array(fields));
       }
 }

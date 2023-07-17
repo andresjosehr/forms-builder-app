@@ -316,10 +316,8 @@ export class ManageForm1Component extends ManageEntityComponent<any> {
 
 
       drop(event: CdkDragDrop<string[]>) {
-
         const fields = this.getFields().controls;
         moveItemInArray(fields, event.previousIndex, event.currentIndex);
         this.entityFG.setControl('fields', this._formBuilder.array(fields));
-        console.log(this.entityFG.value);
       }
 }
