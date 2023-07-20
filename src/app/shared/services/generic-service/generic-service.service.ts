@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { PaginatorParams } from 'app/interfaces/general/paginator-params';
 import { HttpSimpleResponse } from 'app/interfaces/http-responses/http-simple-response';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
