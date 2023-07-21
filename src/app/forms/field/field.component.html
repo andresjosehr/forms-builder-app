@@ -44,7 +44,7 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <div class="col-span-1">
+        <!-- <div class="col-span-1">
             <mat-form-field class="w-full">
                 <mat-label>Tipo de dato</mat-label>
                 <mat-select id="field_type_id" type="text" formControlName="field_type_id">
@@ -56,12 +56,14 @@
                     </ng-container>
                 </mat-error>
             </mat-form-field>
-        </div>
-        <div class="col-span-1">
+        </div> -->
+        <div class="col-span-2">
             <mat-form-field class="w-full">
                 <mat-label>Tipo de campo</mat-label>
                 <mat-select id="input_type_id" type="text" formControlName="input_type_id">
-                    <mat-option *ngFor="let inputType of options?.input_types" [value]="inputType.id">{{inputType.name}}</mat-option>
+                    <ng-container *ngFor="let inputType of options?.input_types">
+                    <mat-option *ngIf="!(inputType.name==='related' && entityFG.value.layout==1)" [value]="inputType.id">{{inputType.name}}</mat-option>
+                    </ng-container>
                 </mat-select>
                 <mat-error *ngFor="let i of _globalService.errorsLength(field.get('input_type_id'))">
                     <ng-container *ngIf="field.get('input_type_id').hasError(i)">

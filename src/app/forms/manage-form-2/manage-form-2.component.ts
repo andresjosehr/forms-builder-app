@@ -127,7 +127,6 @@ export class ManageForm2Component extends ManageEntityComponent<any> {
             name: [field.name || ''],
             built_edition: [field.built_edition || 0],
             label: [field.label || '', Validators.required],
-            field_type_id: [field.field_type_id || 1, Validators.required],
             input_type_id: [field.input_type_id || 1, Validators.required],
             related_entity_id: [field.related_entity_id || null],
             searchable: [searchable, Validators.required],

@@ -5,7 +5,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import {UserService} from 'app/core/user/user.service';
 import {HttpValidationErrorResponse} from 'app/interfaces/http-responses/http-validation-error-response';
-import { environment } from 'environments/environment';
+import { environment } from 'environments/environment.dev';
 import { Observable } from 'rxjs';
 // import saveAs from 'file-saver';
 

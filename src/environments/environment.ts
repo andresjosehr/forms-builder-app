@@ -1,5 +1,0 @@
-export const environment = {
-    production: false,
-    base: 'http://localhost/generador/forms-builder/api/public',
-    api: 'http://localhost/generador/forms-builder/api/public/api'
-};
